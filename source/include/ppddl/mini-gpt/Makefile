@@ -10,7 +10,7 @@ ODEFS	=	-DNDEBUG -DATOM_STATES -DNO_STRICT
 
 LDFLAGS	=	#-R /opt/sfw/gcc-3.4.1/lib
 #CFLAGS	=	-g -Wall $(DEFS)
-CFLAGS	=	-O3 -Wall $(ODEFS)
+CFLAGS	=	-std=c++11 -O3 -Wall $(ODEFS)
 LIBS	=	-lnsl
 INCLUDE	=	#-I ../mdpsim-1.1
 CC	=	gcc

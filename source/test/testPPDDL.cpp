@@ -112,70 +112,75 @@ int main(int argc, char *args[])
     cerr << "INITIAL: " << MLProblem->initialState() << " ";
     Solver* solver;
     register_flags(argc, args);
-    if (flag_is_registered("algorithm") &&
-            flag_value("algorithm") == "soft-flares") {
-        using_soft_flares = true;
-        double depth = 4;
-        double alpha = 0.10;
-        double tol = 1.0e-3;
-        int trials = 1000;
-        if (flag_is_registered_with_value("depth"))
-            depth = stoi(flag_value("depth"));
-        TransitionModifierFunction mod_func = kLogistic;
-        DistanceFunction dist_func = kStepDist;
-        HorizonFunction horizon_func = kFixed;
-        if (flag_is_registered_with_value("alpha"))
-            alpha = stof(flag_value("alpha"));
-        // Distance functions
-        if (flag_is_registered("dist")) {
-            string dist_str = flag_value("dist");
-            if (dist_str == "traj") {
-                dist_func = kTrajProb;
-            } else if (dist_str == "plaus") {
-                dist_func = kPlaus;
-            } else if (dist_str == "depth") {
-                dist_func = kStepDist;
-            } else {
-                cerr << "Error: unknown distance function." << endl;
-                exit(0);
-            }
-        }
-        // Labeling functions
-        if (flag_is_registered("labelf")) {
-            string labelf_str = flag_value("labelf");
-            if (labelf_str == "exp") {
-                mod_func = kExponential;
-            } else if (labelf_str == "step") {
-                mod_func = kStep;
-            } else if (labelf_str == "linear") {
-                mod_func = kLinear;
-            } else if (labelf_str == "logistic") {
-                mod_func = kLogistic;
-            } else {
-                cerr << "Error: unknown labeling function." << endl;
-                exit(0);
-            }
-        }
-        // Labeling functions
-        if (flag_is_registered("horf")) {
-            string labelf_str = flag_value("horf");
-            if (labelf_str == "exp") {
-                horizon_func = kExponentialH;
-            } else if (labelf_str == "fixed") {
-                horizon_func = kFixed;
-            } else if (labelf_str == "bern") {
-                horizon_func = kBernoulli;
-            } else {
-                cerr << "Error: unknown labeling function." << endl;
-                exit(0);
-            }
-        }
-        solver = new SoftFLARESSolver(
-            MLProblem, trials, tol, depth,
-            mod_func, dist_func, horizon_func, alpha);
-        static_cast<SoftFLARESSolver*>(solver)->maxPlanningTime(1000);
-    } else {
-        solver = new LRTDPSolver(MLProblem, ntrials, 0.0001);
+    if (flag_is_registered("algorithm")) {
+	if (flag_value("algorithm") == "soft-flares") {
+	    using_soft_flares = true;
+	    double depth = 4;
+	    double alpha = 0.10;
+	    double tol = 1.0e-3;
+	    int trials = 1000;
+	    if (flag_is_registered_with_value("depth"))
+		depth = stoi(flag_value("depth"));
+	    TransitionModifierFunction mod_func = kLogistic;
+	    DistanceFunction dist_func = kStepDist;
+	    HorizonFunction horizon_func = kFixed;
+	    if (flag_is_registered_with_value("alpha"))
+		alpha = stof(flag_value("alpha"));
+	    // Distance functions
+	    if (flag_is_registered("dist")) {
+		string dist_str = flag_value("dist");
+		if (dist_str == "traj") {
+		    dist_func = kTrajProb;
+		} else if (dist_str == "plaus") {
+		    dist_func = kPlaus;
+		} else if (dist_str == "depth") {
+		    dist_func = kStepDist;
+		} else {
+		    cerr << "Error: unknown distance function." << endl;
+		    exit(0);
+		}
+	    }
+	    // Labeling functions
+	    if (flag_is_registered("labelf")) {
+		string labelf_str = flag_value("labelf");
+		if (labelf_str == "exp") {
+		    mod_func = kExponential;
+		} else if (labelf_str == "step") {
+		    mod_func = kStep;
+		} else if (labelf_str == "linear") {
+		    mod_func = kLinear;
+		} else if (labelf_str == "logistic") {
+		    mod_func = kLogistic;
+		} else {
+		    cerr << "Error: unknown labeling function." << endl;
+		    exit(0);
+		}
+	    }
+	    // Labeling functions
+	    if (flag_is_registered("horf")) {
+		string labelf_str = flag_value("horf");
+		if (labelf_str == "exp") {
+		    horizon_func = kExponentialH;
+		} else if (labelf_str == "fixed") {
+		    horizon_func = kFixed;
+		} else if (labelf_str == "bern") {
+		    horizon_func = kBernoulli;
+		} else {
+		    cerr << "Error: unknown labeling function." << endl;
+		    exit(0);
+		}
+	    }
+	    solver = new SoftFLARESSolver(
+					  MLProblem, trials, tol, depth,
+					  mod_func, dist_func, horizon_func, alpha);
+	    static_cast<SoftFLARESSolver*>(solver)->maxPlanningTime(1000);
+	}
+	else if (flag_value("algorithm") == "laostar") {
+	    solver = new LAOStarSolver(MLProblem);
+	}
+	else {
+	    solver = new LRTDPSolver(MLProblem, ntrials, 0.0001);
+	}
     }
 
 

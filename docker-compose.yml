@@ -1,0 +1,27 @@
+version: '3.3'
+services:
+  rddl_parser_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - type: bind
+        source: ./files
+        target: /files
+      - type: bind
+        source: ./source
+        target: /parser
+    environment:
+      - filesdir=$DIR
+      - inputfile=$INSTANCE
+  rddl_parser:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - type: bind
+        source: ./files
+        target: /files
+    environment:
+      - filesdir=$DIR
+      - inputfile=$INSTANCE
