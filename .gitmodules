@@ -1,0 +1,3 @@
+[submodule "source/include/rddl/mdp_rddl_parsing"]
+	path = source/include/rddl/mdp_rddl_parsing
+	url = https://github.com/mejrpete/mdp_rddl_parsing
