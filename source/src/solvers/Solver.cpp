@@ -141,8 +141,9 @@ mlcore::State* randomSuccessor(mlcore::Problem* problem,
 
 mlcore::Action* greedyAction(mlcore::Problem* problem, mlcore::State* s)
 {
-    if (s->bestAction() != nullptr)
+    if (s->bestAction() != nullptr){
         return s->bestAction();
+    }
     mlcore::Action* bestAction = nullptr;
     double bestQ = mdplib::dead_end_cost;
     bool hasAction = false;

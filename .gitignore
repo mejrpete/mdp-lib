@@ -21,8 +21,8 @@
 *.app
 
 # Related to mini-gpt
-include/ppddl/mdpsim*
-include/ppddl/mini-gpt/planner
+*/include/ppddl/mdpsim*
+*/include/ppddl/mini-gpt/planner
 
 # Other
 lib/*
@@ -44,3 +44,5 @@ planserv
 
 #apple stuff
 *.DS_*
+*.#*
+source/lib/rddl-parser

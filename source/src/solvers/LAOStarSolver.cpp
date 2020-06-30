@@ -55,8 +55,9 @@ int LAOStarSolver::expand(mlcore::State* s)
         return 1;
     } else {
         mlcore::Action* a = s->bestAction();
-        for (mlcore::Successor sccr : problem_->transition(s, a))
+        for (mlcore::Successor sccr : problem_->transition(s, a)) {
             cnt += expand(sccr.su_state);
+	}
     }
     bellmanUpdate(problem_, s, weight_);
     return cnt;

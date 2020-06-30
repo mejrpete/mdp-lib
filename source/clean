@@ -1,0 +1,3 @@
+#!/bin/bash
+make clean &&
+(cd include/rddl/mdp_rddl_parsing/source && ./clean)

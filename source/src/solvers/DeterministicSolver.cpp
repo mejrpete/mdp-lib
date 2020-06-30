@@ -64,7 +64,6 @@ mlcore::Action* DeterministicSolver::solve(mlcore::State* s0)
     double costToGo = 0.0;
     costLastPathFound_.clear();
     while (finalNode->parent() != nullptr) {
-        optimal = finalNode->action();
         mlcore::State* s = finalNode->state();
         if (cache_.count(s))
             costToGo += cache_.at(s);
@@ -72,10 +71,11 @@ mlcore::Action* DeterministicSolver::solve(mlcore::State* s0)
             costToGo += problem_->cost(s, optimal);
         costLastPathFound_[s] = costToGo;
         cache_[s] = costToGo;
+        optimal = finalNode->action();
         finalNode = finalNode->parent();
     }
-    optimal = finalNode->action();
-    costToGo += problem_->cost(finalNode->state(), optimal);
+    //optimal = finalNode->action();
+    //costToGo += problem_->cost(finalNode->state(), optimal);
     costLastPathFound_[finalNode->state()] = costToGo;
     cache_[finalNode->state()] = costToGo;
 

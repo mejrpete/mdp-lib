@@ -5,7 +5,8 @@
 
 # Compilation flags and variables
 CC = g++
-CFLAGS = -std=c++11 -O3 -DATOM_STATES -DNDEBUG -pthread
+CFLAGS = -std=c++11 -O3 -DATOM_STATES -pthread -g -O0 -fprofile-arcs -ftest-coverage
+
 
 # Variables for directories
 ID = include
@@ -16,9 +17,11 @@ ID_UTIL = $(ID)/util
 SD_UTIL = $(SD)/util
 ID_SOLV = $(ID)/solvers
 ID_PPDDL = $(ID)/ppddl
+ID_RDDL = $(ID)/rddl
 SD_SOLV = $(SD)/solvers
 OD_SOLV = $(OD)/solvers
 OD_PPDDL = $(OD)/ppddl
+OD_RDDL = $(ID)/rddl
 ID_REDUCED = $(ID)/reduced
 SD_REDUCED = $(SD)/reduced
 OD_REDUCED = $(OD)/reduced
@@ -50,6 +53,7 @@ INCLUDE_DOM = -I$(ID_GW) -I$(ID_CTP) -I$(ID_SAIL) -I$(ID_DOMAINS) -I$(ID_RACE)
 INCLUDE_CORE = -I$(ID_UTIL) -I$(ID)
 INCLUDE_SOLVERS = -I$(ID_SOLV) -I$(ID_SOLV_MOBJ)
 INCLUDE_PPDDL = -I$(ID_PPDDL) -I$(ID_PPDDL)/mini-gpt
+INCLUDE_RDDL = -I$(ID_RDDL) -I$(ID_RDDL)/mdp_rddl_parsing/source/search
 INCLUDE = $(INCLUDE_DOM) $(INCLUDE_CORE) $(INCLUDE_SOLVERS)
 
 # Variables for source/header files
@@ -81,7 +85,7 @@ ALL_H = $(I_H) $(SOLV_H) $(MOSOLV_H) $(DOM_H) $(UTIL_H)
 ALL_CPP = $(DOM_CPP) $(SOLV_CPP) $(MOSOLV_CPP) $(UTIL_CPP)
 
 # Libraries
-LIBS = lib/libmdp.a lib/libmdp_domains.a -Llib
+LIBS = lib/libmdp.a lib/libmdp_domains.a
 LIBS_GUROBI = $(LIBS) -lgurobi60 -Llib
 
 #########################################################################
@@ -264,6 +268,23 @@ lib/libminigpt.a test/testPPDDL.cpp test/testClient.cpp test/planningServer.cpp
 	  -o planserv $(TD)/planningServer.cpp include/ppddl/mini-gpt/heuristics.cc \
 	  -Llib  lib/libmdp_ppddl.a lib/libmdp.a lib/libminigpt.a
 
+lib/librddlparser.a: include/rddl/mdp_rddl_parsing/source/*/*
+	make -C include/rddl/mdp_rddl_parsing/source/rddl_parser
+	make -C include/rddl/mdp_rddl_parsing/source/search debug_no_boost
+	cp include/rddl/mdp_rddl_parsing/source/rddl_parser/rddl-parser rddl-parser
+	ar rvs lib/librddlparser.a include/rddl/mdp_rddl_parsing/source/search/.obj/*.o include/rddl/mdp_rddl_parsing/source/search/.obj/utils/*.o
+
+## Compiles the RDDL library
+rddl: lib/librddlparser.a lib/libmdp.a src/rddl/*.cpp include/rddl/*.h
+	$(CC) $(CFLAGS) -Iinclude -Iinclude/rddl -I$(ID_SOLV) -c src/rddl/*.cpp  -Llib -lbdd -lstdc++fs
+	mkdir -p $(TD)
+	ar rvs lib/libmdp_rddl.a *.o
+	mkdir -p $(OD_RDDL)
+	mv *.o $(OD_RDDL)
+	$(CC) $(CFLAGS) -Iinclude -I$(ID_SOLV) -I$(ID_UTIL) $(INCLUDE_RDDL) \
+	  -o testrddl.out $(TD)/testRDDL.cpp \
+	  -Llib lib/libmdp_rddl.a lib/libmdp.a lib/librddlparser.a -Llib -lbdd -lstdc++fs
+
 # Compiles the reduced model code
 reduced: lib/libmdp_reduced.a
 lib/libmdp_reduced.a: lib/libmdp.a domains ppddl $(SD_REDUCED)/*.cpp $(ID_REDUCED)/*.h
@@ -310,4 +331,4 @@ clean:
 	rm -f $(OD)/solvers/*.a
 	rm -f $(OD)/solvers/mobj/*
 	rm -f $(ID_PPDDL)/mini-gpt/*.o
-	rm -f lib/libmdp*.a
+	rm -f lib/*
