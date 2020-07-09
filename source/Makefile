@@ -5,7 +5,7 @@
 
 # Compilation flags and variables
 CC = g++
-CFLAGS = -std=c++11 -O3 -DATOM_STATES -pthread -g -O0 -fprofile-arcs -ftest-coverage
+CFLAGS = -std=c++11 -O3 -DATOM_STATES -DNDEBUG -pthread -fprofile-arcs -ftest-coverage
 
 
 # Variables for directories
@@ -270,7 +270,7 @@ lib/libminigpt.a test/testPPDDL.cpp test/testClient.cpp test/planningServer.cpp
 
 lib/librddlparser.a: include/rddl/mdp_rddl_parsing/source/*/*
 	make -C include/rddl/mdp_rddl_parsing/source/rddl_parser
-	make -C include/rddl/mdp_rddl_parsing/source/search debug_no_boost
+	make -C include/rddl/mdp_rddl_parsing/source/search
 	cp include/rddl/mdp_rddl_parsing/source/rddl_parser/rddl-parser rddl-parser
 	ar rvs lib/librddlparser.a include/rddl/mdp_rddl_parsing/source/search/.obj/*.o include/rddl/mdp_rddl_parsing/source/search/.obj/utils/*.o
 

@@ -2,4 +2,4 @@
 dir=$1
 problem=$2
 
-timeout 30m time ../testrddl.out ${dir} ${problem}
+timeout 10m time ../testrddl.out --problemdir=${dir} --instance=${problem}

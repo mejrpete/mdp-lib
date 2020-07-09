@@ -35,6 +35,7 @@ bool RDDLProblem::goal(mlcore::State* s) const
 std::list<mlcore::Successor>
     RDDLProblem::transition(mlcore::State* s, mlcore::Action* a)
 {
+    assert(applicable(s,a));
     RDDLAction* action = (RDDLAction *) a;
     RDDLState* state = (RDDLState *) s;
 
@@ -46,11 +47,12 @@ std::list<mlcore::Successor>
     //the new state and transition probability
     //TODO: are we supposed to be including successors with prob 0?
     for (int i = 0; i < allSuccessors.size(); ++i) {
-	rddlmdp::State* persistBackendS = new rddlmdp::State(*allSuccessors[i].state);
-	RDDLState* nextState = new RDDLState(this, persistBackendS);
-	assert(persistBackendS->stepsToGo() == state->pState()->stepsToGo() -1);
-	//	assert(allSuccessors[i].prob < 1);
-	successors.push_back(mlcore::Successor(this->addState(nextState), allSuccessors[i].prob));
+	if (allSuccessors[i].prob > 0.00000000000001) { //TODO: ... deal with this constant
+	    rddlmdp::State* persistBackendS = new rddlmdp::State(allSuccessors[i].state);
+	    RDDLState* nextState = new RDDLState(this, persistBackendS);
+	    assert(persistBackendS->stepsToGo() == state->pState()->stepsToGo() -1);
+	    successors.push_back(mlcore::Successor(this->addState(nextState), allSuccessors[i].prob));
+	}
     }
     return successors;
 }

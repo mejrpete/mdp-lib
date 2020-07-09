@@ -36,10 +36,7 @@ NOTE: need to be careful of "stateHashingPossible" in stuff like EqualWithoutRem
 TODO: should really force constant references on all of the important stuff coming out of prost lib into mdplib. Need to make sure we're not breaking prost logic internally by anything mdplib is doing. 
 
 
-TODO: need to make sure extractor wrapper is properly changing time when we generate transitions!
-TODO: should we be taking time into account when we're computing hashes and equality for pState, etc?
 TODO: could have a nontrivial heuristic based on the determinization? As long as goal stuff is reliable it would be admissible? Not sure about Kleene state stuff for that though... Need to think.
-
 
 TODO: fail better when the rddl file doesn't exist at the given location. use experiemttal::filesystem probably?
 
@@ -51,8 +48,8 @@ TODO: switch from prost-dd-1 code to prost core code for lib
 
 TODO: separate debugging and release options (needed because of changes made for building prost and libmdp with debugging)
 
-TODO: is the libmdp code actually able to use the noop action? haven't seen it yet. need to make sure.
-
 TODO: need to make discount factor available from the RDDL instance file (parsed through prost) for libmdp
 
-TODO: hard coded change in RDDL that allows integers to be state fluents has 300 upper limit on int values. this is a dumb thing to do. fix. rddl.cc in rddl_parser.
+TODO: hard coded change in RDDL that allows integers to be state fluents has 300 upper limit on int values. this is a dumb thing to do. fix. rddl.cc in rddl_parser. (hard coded to 300)
+
+TODO: need to add PROST-side caching back in. don't know what the bug was that was a problem when enabled. probably useful to speed stuff up on queries, etc. Would be good to use it.
