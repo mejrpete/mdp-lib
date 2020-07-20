@@ -1,45 +1,6 @@
 TODOS:
 
-- Do a better job of abstraction layer for Prost code on backend
-- Implement RDDL stuff parallell to PPDDL code. Same sort of approach but use abstracted Prost code on the backend
-
-
-- Going to need to deal with lack of namespace distinction between, for example mlcore::Action and Action from prost library. I think.
-- Need to implement equals and hash_value for RDDLState (need to figure out what part of the prost code I'm using).
-- Need to make sure noop is included in the action set for RDDLProblem
-- Need to ensure for the fake goal logic in RDDLProblem that remainingSteps is decremented correctly in the states pulled out of the Prost implementation
-- How do we get the probabiltities for successor states out of the Prost implementation? Easy to sample from PDState, but not what we want. Want access to the probability distribution.
-
-- Need to make successor state struct available to RDDLProblem
-
-
-- Really really need to do some naming stuff with the Extractor wrapper class in the Prost code to make things less horrible in terms of naming confusion in the RDDL* code in mdplib.
-  |
-   -> Wonder if there's a good way to deal with this by introducing another namespace in the wrapper class or just creating wrapper names for all of the internal classes. Is there such thing as a class alias in c++? Something like a trivial typedef so we can make names work better? Can we just do that with typedef? I think that makes sense actually.
-
-
-How do we compute the probability of a given state configuration via the Prost PDState and the internal probability distributions?
-- We can't just sample like they do, since we need to actually build the transition function.
-- We're realistically going to want some caching here later (TODO)
-- Each state fluent is only mentioned once in the CPTs, which is helpful.
-  - But we need to think about how they covary, right?
-  - And need to think about configurations which are prohibited by some rule.
-  - The good news is that the only things a state fluent can depend on (without intm. fluents) are previous step state flunts and current state action fluents.
-  Answer: we can just take the product over each state factor value. things are conditionally independent given the previous state value and the current action. We might have to worry about state invariants if those were part of the cards here, but we're ignoring it for now.
-
-
-todo: libinterface is a terrible name for the namespace for extractor in the prost addition. figure that out and get a good naming convention going.
-
-NOTE: need to be careful of "stateHashingPossible" in stuff like EqualWithoutRemSteps in prost/states.h. If I'm actually using that operator things could get dicy, right?
-
-
-TODO: should really force constant references on all of the important stuff coming out of prost lib into mdplib. Need to make sure we're not breaking prost logic internally by anything mdplib is doing. 
-
-
-TODO: could have a nontrivial heuristic based on the determinization? As long as goal stuff is reliable it would be admissible? Not sure about Kleene state stuff for that though... Need to think.
-
 TODO: fail better when the rddl file doesn't exist at the given location. use experiemttal::filesystem probably?
-
 TODO: should really clean up makefiles for everything. thinking about debugging versus whatever else.
 
 TODO: test coverage for RDDL stuff in libmdp? along with general cleaning up and improvements?
@@ -47,9 +8,10 @@ TODO: what's the best way to clean up PROST inclusion as a lib? Would prefer to 
 TODO: switch from prost-dd-1 code to prost core code for lib
 
 TODO: separate debugging and release options (needed because of changes made for building prost and libmdp with debugging)
-
 TODO: need to make discount factor available from the RDDL instance file (parsed through prost) for libmdp
 
 TODO: hard coded change in RDDL that allows integers to be state fluents has 300 upper limit on int values. this is a dumb thing to do. fix. rddl.cc in rddl_parser. (hard coded to 300)
 
 TODO: need to add PROST-side caching back in. don't know what the bug was that was a problem when enabled. probably useful to speed stuff up on queries, etc. Would be good to use it.
+
+Fix make invocation so that we can actually build in parallel.

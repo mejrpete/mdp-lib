@@ -5,7 +5,7 @@
 
 # Compilation flags and variables
 CC = g++
-CFLAGS = -std=c++11 -O3 -DATOM_STATES -DNDEBUG -pthread -fprofile-arcs -ftest-coverage
+CFLAGS = -std=c++11 -O3 -DATOM_STATES -DNDEBUG -pthread
 
 
 # Variables for directories
@@ -95,16 +95,16 @@ LIBS_GUROBI = $(LIBS) -lgurobi60 -Llib
 # Compiles the core MDP-LIB library #
 libmdp: lib/libmdp.a
 lib/libmdp.a: $(OD)/core.a $(OD)/solvers.a
-	make $(OD)/core.a
-	make $(OD)/solvers.a
+	$(MAKE) $(OD)/core.a
+	$(MAKE) $(OD)/solvers.a
 	ar rvs libmdp.a $(OD)/core/*.o $(OD)/solvers/*.o
 	mkdir -p lib
 	mv libmdp.a lib
 
 # Compiles the multi-objective solvers
 $(OD)/mo-solvers.a: $(S_CPP) $(UTIL_CPP) $(I_H) $(UTIL_H) $(SOLV_CPP) $(SOLV_H) $(MOSOLV_H) $(MOSOLV_CPP)
-	make $(OD)/core.a
-	make $(OD)/solvers.a
+	$(MAKE) $(OD)/core.a
+	$(MAKE) $(OD)/solvers.a
 	$(CC) $(CFLAGS) $(INCLUDE_CORE) $(INCLUDE_SOLVERS) -c $(MOSOLV_CPP)
 	mkdir -p $(OD_SOLV_MOBJ)
 	mv *.o $(OD_SOLV_MOBJ)
@@ -113,7 +113,7 @@ $(OD)/mo-solvers.a: $(S_CPP) $(UTIL_CPP) $(I_H) $(UTIL_H) $(SOLV_CPP) $(SOLV_H) 
 
 # Compiles the base (single-objective) solvers
 $(OD)/solvers.a: $(S_CPP) $(UTIL_CPP) $(I_H) $(UTIL_H) $(SOLV_CPP) $(SOLV_H) $(ID_DOMAINS)/*.h $(SD_DOMAINS)/*.cpp
-	make $(OD)/core.a
+	$(MAKE) $(OD)/core.a
 	$(CC) $(CFLAGS) $(INCLUDE_CORE) $(ID_DOMAINS)/*.h -c $(SOLV_CPP) \
 		$(SD_DOMAINS)/*.cpp
 	mkdir -p $(OD_SOLV)
@@ -129,11 +129,11 @@ $(OD)/core.a: $(S_CPP) $(UTIL_CPP) $(I_H) $(UTIL_H)
 
 # Compiles the multi-objective domains and test programs #
 mobj: $(ALL_CPP) $(ALL_H)
-	make $(OD)/mo-solvers.a
-	make $(OD_MOBJ_DOMAINS)/airplane.a
-	make $(OD_MOBJ_DOMAINS)/mo-racetrack.a
-	make $(OD_MOBJ_DOMAINS)/mo-gw.a
-	make $(OD_MOBJ_DOMAINS)/rawfile.a
+	$(MAKE) $(OD)/mo-solvers.a
+	$(MAKE) $(OD_MOBJ_DOMAINS)/airplane.a
+	$(MAKE) $(OD_MOBJ_DOMAINS)/mo-racetrack.a
+	$(MAKE) $(OD_MOBJ_DOMAINS)/mo-gw.a
+	$(MAKE) $(OD_MOBJ_DOMAINS)/rawfile.a
 	$(CC) $(CFLAGS) $(INCLUDE) -o testlexirace $(TD)/testLexiRace.cpp $(OD_MOBJ_DOMAINS)/*.o lib/libmdp_mosolvers.a $(LIBS_GUROBI)
 	$(CC) $(CFLAGS) $(INCLUDE) -o testlexigw $(TD)/testLexiGW.cpp $(OD_MOBJ_DOMAINS)/*.o lib/libmdp_mosolvers.a $(LIBS_GUROBI)
 	$(CC) $(CFLAGS) $(INCLUDE) -o testlexiraw $(TD)/testLexiRaw.cpp $(OD_MOBJ_DOMAINS)/*.o lib/libmdp_mosolvers.a $(LIBS_GUROBI)
@@ -269,8 +269,8 @@ lib/libminigpt.a test/testPPDDL.cpp test/testClient.cpp test/planningServer.cpp
 	  -Llib  lib/libmdp_ppddl.a lib/libmdp.a lib/libminigpt.a
 
 lib/librddlparser.a: include/rddl/mdp_rddl_parsing/source/*/*
-	make -C include/rddl/mdp_rddl_parsing/source/rddl_parser
-	make -C include/rddl/mdp_rddl_parsing/source/search
+	$(MAKE) -C include/rddl/mdp_rddl_parsing/source/rddl_parser
+	$(MAKE) -C include/rddl/mdp_rddl_parsing/source/search
 	cp include/rddl/mdp_rddl_parsing/source/rddl_parser/rddl-parser rddl-parser
 	ar rvs lib/librddlparser.a include/rddl/mdp_rddl_parsing/source/search/.obj/*.o include/rddl/mdp_rddl_parsing/source/search/.obj/utils/*.o
 
@@ -332,3 +332,4 @@ clean:
 	rm -f $(OD)/solvers/mobj/*
 	rm -f $(ID_PPDDL)/mini-gpt/*.o
 	rm -f lib/*
+	rm -f rddl-parser

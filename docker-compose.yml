@@ -1,6 +1,6 @@
 version: '3.3'
 services:
-  pinedalib_dev:
+  libmdprddl_dev:
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -13,7 +13,7 @@ services:
         target: /app
     stdin_open: true
     tty: true
-  pinedalib:
+  libmdprddl:
     build:
       context: .
       dockerfile: Dockerfile
@@ -22,5 +22,11 @@ services:
         source: ./files
         target: /files
     environment:
-      - dir=$DIR
-      - problem=$INSTANCE
+      - problem=${PROBLEM}
+      - solver=$SOLVER
+      - heuristic=$HEURISTIC
+      - verbosity=$VERBOSITY
+      - nsims=$NSIMS
+      - interactive=$INTERACTIVE
+    stdin_open: true
+    tty: true

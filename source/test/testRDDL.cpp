@@ -257,8 +257,11 @@ int main(int argc, char* args[])
     if (verbosity > 100) {
 	cerr << "Planning time " << totalTime << endl;
     }
+
+    int nsims = 1;
+    if (flag_is_registered_with_value("nsims"))
+	nsims = stoi(flag_value("nsims"));
     
-    int nsims = 100;
     double expectedCost = 0.0;
     double expectedTime = 0.0;
     StateSet statesSeen;
@@ -273,12 +276,16 @@ int main(int argc, char* args[])
 
 	    if (verbosity > 999 || flag_is_registered("interactive")) {
 		int count = 1;
+		cout << "                                                   "
+		     << "[id] action: q-value" << endl;
+		cout << "                                                   "
+		     << "--------------------" << endl;
 		for (mlcore::Action* a : problem->actions()) {
 		    if (problem->applicable(tmp, a)) {
 			double qAction = std::min(mdplib::dead_end_cost, qvalue(problem, tmp, a));
 			cout << "                                                   "
 			     << "[" << count << "] "
-			     << a << ": " << qAction << endl;
+			     << a << ": " << -1*qAction << endl;
 		    }
 		    ++count;
 		}

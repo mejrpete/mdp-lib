@@ -7,14 +7,17 @@ WORKDIR /app
 
 COPY ./source/ /app
 
-RUN make minigpt libmdp ppddl rddl
-RUN make test
+RUN make -j 5 libmdp rddl
 
 #####################
 
 FROM compiled AS final
 
-ENV dir /files/
-ENV problem academic-advising_inst_mdp__01
+ENV problem "gfb_inst_mdp__1"
+ENV solver "laostar"
+ENV heuristic "hmin"
+ENV verbosity 100
+ENV nsims 1
+ENV interactive ""
 
-CMD cd scripts && ./run_testrddl.sh ${dir} ${problem}
+CMD ["bash", "-c", "./testrddl.out --problemdir=/files/ --instance=${problem} --algorithm=${solver} --heuristic=${hmin} --nsims=${nsims} --v=${verbosity} ${interactive:+--interactive}"]
