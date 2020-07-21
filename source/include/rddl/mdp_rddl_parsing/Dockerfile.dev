@@ -1,0 +1,15 @@
+FROM ubuntu:18.04 AS base
+
+RUN apt-get update \
+    && apt-get -y install apt-utils \
+    && apt -y install mercurial g++ g++-multilib make cmake bison flex python automake autoconf libtool libbdd-dev
+
+#####################
+
+WORKDIR /parser
+
+ENV filesdir /files
+ENV inputfile input.rddl
+
+## Call your planner
+CMD ["bash", "-c", "./build_1 && ./build_2 && cd search && ./parser ${filesdir} ${inputfile}"]

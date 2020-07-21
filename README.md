@@ -1,4 +1,4 @@
-Derived from [mdp-lib]{https://github.com/luisenp/mdp-lib}. Updated to support SSPs parsed from RDDL files.
+Derived from [mdp-lib](https://github.com/luisenp/mdp-lib). Updated to support SSPs parsed from RDDL files.
 
 RDDL support is provided by a modified version of the PROST planner (wrapped up as a library).
 

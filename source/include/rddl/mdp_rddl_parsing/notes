@@ -1,0 +1,20 @@
+Need to take the parsed information from the prost code and be able to
+build a system for state/action transitions and reward emission that
+is compatible with LAO*-style heuristic search.
+
+
+mdp.takeAction(action) should move to the next state. This should be done
+probabilistically, I need to sample from the transition definition.
+
+1) I need to know how the transition definitions, state/actiond
+definitions, constraint defintiions work in the prost parser.
+2) I need to start building up the codebase in an organized way. How
+do I manage needing to test?
+
+
+TODOS:
+0) Figure out what "remaining steps" is in the state representation. Why is it always -1 if I pick arb action? (confirm!!!!) Do do with action applicability?
+   Answer: You have to invoke an appropriate constructor or else it doesn't do anything.
+1) Incorporate the prost code as a dependency in Louis' SSP codebase.
+2) Implement a fake goal configuration for finite horizon problems.
+3) Trim down the prost dependencies needed for generation

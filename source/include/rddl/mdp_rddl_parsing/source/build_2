@@ -1,0 +1,4 @@
+#!/bin/bash
+cd search
+make -j 6 &&
+cp ../rddl_parser/rddl-parser ./

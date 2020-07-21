@@ -1,0 +1,6 @@
+#!/bin/bash
+cd search/ &&
+make clean &&
+cd ../rddl_parser &&
+make clean &&
+cd ..

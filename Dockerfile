@@ -19,5 +19,6 @@ ENV heuristic "hmin"
 ENV verbosity 100
 ENV nsims 1
 ENV interactive ""
+ENV dir ""
 
-CMD ["bash", "-c", "./testrddl.out --problemdir=/files/ --instance=${problem} --algorithm=${solver} --heuristic=${hmin} --nsims=${nsims} --v=${verbosity} ${interactive:+--interactive}"]
+CMD ["bash", "-c", "./testrddl.out --problemdir=/files/${dir}/ --instance=${problem} --algorithm=${solver} --heuristic=${hmin} --nsims=${nsims} --v=${verbosity} ${interactive:+--interactive}"]
